@@ -8,20 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		00031B661EF50478001638A0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00031B651EF50478001638A0 /* AppDelegate.swift */; };
-		00031B681EF50478001638A0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00031B671EF50478001638A0 /* ViewController.swift */; };
 		00031B6B1EF50478001638A0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 00031B691EF50478001638A0 /* Main.storyboard */; };
 		00031B6D1EF50478001638A0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00031B6C1EF50478001638A0 /* Assets.xcassets */; };
 		00031B701EF50478001638A0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 00031B6E1EF50478001638A0 /* LaunchScreen.storyboard */; };
+		00031B7A1EF5048B001638A0 /* VideoCaptureVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00031B771EF5048B001638A0 /* VideoCaptureVC.swift */; };
+		00031B7B1EF5048B001638A0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00031B781EF5048B001638A0 /* ViewController.swift */; };
+		00031B7C1EF5048B001638A0 /* UIDeviceOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00031B791EF5048B001638A0 /* UIDeviceOrientation.swift */; };
+		00031B7F1EF51A39001638A0 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00031B7E1EF51A39001638A0 /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		00031B621EF50478001638A0 /* VisionFun.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VisionFun.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		00031B651EF50478001638A0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		00031B671EF50478001638A0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		00031B6A1EF50478001638A0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		00031B6C1EF50478001638A0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		00031B6F1EF50478001638A0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		00031B711EF50478001638A0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		00031B771EF5048B001638A0 /* VideoCaptureVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCaptureVC.swift; sourceTree = "<group>"; };
+		00031B781EF5048B001638A0 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		00031B791EF5048B001638A0 /* UIDeviceOrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIDeviceOrientation.swift; sourceTree = "<group>"; };
+		00031B7E1EF51A39001638A0 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,11 +61,14 @@
 			isa = PBXGroup;
 			children = (
 				00031B651EF50478001638A0 /* AppDelegate.swift */,
-				00031B671EF50478001638A0 /* ViewController.swift */,
 				00031B691EF50478001638A0 /* Main.storyboard */,
+				00031B791EF5048B001638A0 /* UIDeviceOrientation.swift */,
+				00031B7E1EF51A39001638A0 /* Extensions.swift */,
+				00031B781EF5048B001638A0 /* ViewController.swift */,
+				00031B771EF5048B001638A0 /* VideoCaptureVC.swift */,
 				00031B6C1EF50478001638A0 /* Assets.xcassets */,
-				00031B6E1EF50478001638A0 /* LaunchScreen.storyboard */,
 				00031B711EF50478001638A0 /* Info.plist */,
+				00031B6E1EF50478001638A0 /* LaunchScreen.storyboard */,
 			);
 			path = VisionFun;
 			sourceTree = "<group>";
@@ -135,8 +144,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00031B681EF50478001638A0 /* ViewController.swift in Sources */,
+				00031B7F1EF51A39001638A0 /* Extensions.swift in Sources */,
+				00031B7B1EF5048B001638A0 /* ViewController.swift in Sources */,
 				00031B661EF50478001638A0 /* AppDelegate.swift in Sources */,
+				00031B7C1EF5048B001638A0 /* UIDeviceOrientation.swift in Sources */,
+				00031B7A1EF5048B001638A0 /* VideoCaptureVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
