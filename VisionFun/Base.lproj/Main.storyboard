@@ -5,8 +5,14 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.14"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="HelveticaNeue.ttc">
+            <string>HelveticaNeue</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -44,11 +50,48 @@
         <scene sceneID="G2V-4v-fuG">
             <objects>
                 <viewController id="2f4-hv-tBb" customClass="VideoCaptureViewController" customModule="VisionFun" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="tbx-cp-7KE"/>
+                        <viewControllerLayoutGuide type="bottom" id="1cm-et-pO3"/>
+                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="PCY-uk-vN8">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Classification Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bMa-eD-DLf">
+                                <rect key="frame" x="16" y="40" width="343" height="34"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="28"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" cocoaTouchSystemColor="darkTextColor"/>
+                            </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="nQ4-jR-PnP">
+                                <rect key="frame" x="16" y="603" width="343" height="45"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="RlD-Xo-XDR"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="Rectangles"/>
+                                    <segment title="Classifications"/>
+                                </segments>
+                                <connections>
+                                    <action selector="selectionChanged:" destination="2f4-hv-tBb" eventType="valueChanged" id="DcT-za-fjh"/>
+                                </connections>
+                            </segmentedControl>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="leadingMargin" secondItem="nQ4-jR-PnP" secondAttribute="leading" id="1ib-Y3-U9B"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="bMa-eD-DLf" secondAttribute="leading" id="9Gc-Wm-GPq"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="bMa-eD-DLf" secondAttribute="trailing" id="H6h-dL-Cpm"/>
+                            <constraint firstItem="1cm-et-pO3" firstAttribute="top" secondItem="nQ4-jR-PnP" secondAttribute="bottom" constant="20" id="cgy-H6-nfq"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="nQ4-jR-PnP" secondAttribute="trailing" id="faa-sg-aYM"/>
+                            <constraint firstItem="bMa-eD-DLf" firstAttribute="top" secondItem="tbx-cp-7KE" secondAttribute="bottom" constant="20" id="v02-FF-G3B"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="classificationLabel" destination="bMa-eD-DLf" id="VGa-xm-yDV"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="i5c-XK-w4s" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

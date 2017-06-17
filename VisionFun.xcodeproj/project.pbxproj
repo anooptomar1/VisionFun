@@ -15,6 +15,7 @@
 		00031B7B1EF5048B001638A0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00031B781EF5048B001638A0 /* ViewController.swift */; };
 		00031B7C1EF5048B001638A0 /* UIDeviceOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00031B791EF5048B001638A0 /* UIDeviceOrientation.swift */; };
 		00031B7F1EF51A39001638A0 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00031B7E1EF51A39001638A0 /* Extensions.swift */; };
+		00031B811EF52EEC001638A0 /* Inceptionv3.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 00031B801EF52EEC001638A0 /* Inceptionv3.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		00031B781EF5048B001638A0 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		00031B791EF5048B001638A0 /* UIDeviceOrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIDeviceOrientation.swift; sourceTree = "<group>"; };
 		00031B7E1EF51A39001638A0 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		00031B801EF52EEC001638A0 /* Inceptionv3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = Inceptionv3.mlmodel; path = "../../../../ML Models/Inceptionv3.mlmodel"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 		00031B641EF50478001638A0 /* VisionFun */ = {
 			isa = PBXGroup;
 			children = (
+				00031B801EF52EEC001638A0 /* Inceptionv3.mlmodel */,
 				00031B651EF50478001638A0 /* AppDelegate.swift */,
 				00031B691EF50478001638A0 /* Main.storyboard */,
 				00031B791EF5048B001638A0 /* UIDeviceOrientation.swift */,
@@ -145,6 +148,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00031B7F1EF51A39001638A0 /* Extensions.swift in Sources */,
+				00031B811EF52EEC001638A0 /* Inceptionv3.mlmodel in Sources */,
 				00031B7B1EF5048B001638A0 /* ViewController.swift in Sources */,
 				00031B661EF50478001638A0 /* AppDelegate.swift in Sources */,
 				00031B7C1EF5048B001638A0 /* UIDeviceOrientation.swift in Sources */,
