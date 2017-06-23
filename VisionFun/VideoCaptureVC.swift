@@ -10,8 +10,9 @@ class VideoCaptureViewController: UIViewController {
     
     // MARK: - Outlets
     
-    @IBOutlet var classificationLabel: UILabel!
-    @IBOutlet var imageView: UIImageView!
+    @IBOutlet var blurView: UIVisualEffectView!
+    @IBOutlet var tableView: UITableView!
+    @IBOutlet var hideTableViewConstraint: NSLayoutConstraint!
     
     // MARK: - Stored Properties
     
@@ -22,6 +23,7 @@ class VideoCaptureViewController: UIViewController {
     private var requests = [VNRequest]()
     
     private let shapeLayer = CAShapeLayer()
+    private var classifications: [VNClassificationObservation] = []
     
     // MARK: - Computed Properties
     
@@ -83,10 +85,15 @@ class VideoCaptureViewController: UIViewController {
             try addPreviewLayer(for: captureSession!, to: self.view)
             try addVideoDataOutput(to: captureSession!)
             addShapeLayer()
-            classificationLabel.isHidden = true
         } catch {
             print(error)
         }
+        
+        self.blurView.layer.maskedCorners = [
+            .layerMinXMinYCorner, .layerMaxXMinYCorner
+        ]
+        self.blurView.layer.masksToBounds = true
+        self.blurView.layer.cornerRadius = 10
     }
     
     private func makeVideoCaptureSession() throws -> AVCaptureSession {
@@ -136,7 +143,7 @@ class VideoCaptureViewController: UIViewController {
     
     private func addShapeLayer() {
         shapeLayer.fillColor = UIColor.yellow.withAlphaComponent(0.5).cgColor
-        self.view.layer.addSublayer(shapeLayer)
+        self.previewLayer?.addSublayer(shapeLayer)
     }
     
     // MARK: - Vision
@@ -162,21 +169,19 @@ class VideoCaptureViewController: UIViewController {
         self.rectangleDetectionRequest = VNDetectRectanglesRequest(
             completionHandler: self.handleRectangles
         )
-        rectangleDetectionRequest?.maximumObservations = 5
+        rectangleDetectionRequest?.maximumObservations = 100
         
         self.requests = [
-            rectangleDetectionRequest!
+            classificationRequest!
         ]
     }
     
     func handleClassifications(request: VNRequest, error: Error?) {
         guard let observations = request.results as? [VNClassificationObservation] else { return }
         
-        let classifications = observations[0...10].filter({ $0.confidence > 0.1 })
-        let classificationMessages = classifications.map({ "\($0.identifier)\nconfidence: \($0.confidence)" })
-        
         DispatchQueue.main.async {
-            self.classificationLabel.text = classificationMessages.joined(separator: "\n\n")
+            self.classifications = observations.filter({ $0.confidence > 0.1 })
+            self.tableView.reloadData()
         }
     }
     
@@ -217,26 +222,43 @@ class VideoCaptureViewController: UIViewController {
         shapeLayer.path = path.cgPath
     }
     
+    // MARK: - Actions
     
     @IBAction func selectionChanged(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
-        case 0: // Rectangles
-            guard let rectangleDetectionRequest = self.rectangleDetectionRequest else { return }
-            requests = [rectangleDetectionRequest]
-            
-            classificationLabel.isHidden = true
-            shapeLayer.isHidden = false
-            
-        case 1: // Classifications
+        case 0: // Classifications
             guard let classificationRequest = self.classificationRequest else { return }
             requests = [classificationRequest]
             
-            classificationLabel.isHidden = false
             shapeLayer.isHidden = true
+            setTableViewVisibility(visible: true)
+            
+        case 1: // Rectangles
+            guard let rectangleDetectionRequest = self.rectangleDetectionRequest else { return }
+            requests = [rectangleDetectionRequest]
+            
+            shapeLayer.isHidden = false
+            setTableViewVisibility(visible: false)
             
         default:
             break
         }
+    }
+    
+    // MARK: - View Helpers
+    
+    private func setTableViewVisibility(visible: Bool) {
+        hideTableViewConstraint.priority = visible ? .defaultLow : .defaultHigh
+        
+        UIView.animate(
+            withDuration: 0.3,
+            delay: 0.0,
+            usingSpringWithDamping: 1.0,
+            initialSpringVelocity: 2.0,
+            options: [],
+            animations: { self.view.layoutIfNeeded() },
+            completion: nil
+        )
     }
 }
 
@@ -269,3 +291,38 @@ extension VideoCaptureViewController: AVCaptureVideoDataOutputSampleBufferDelega
     }
 }
 
+extension VideoCaptureViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.classifications.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "classificationCell", for: indexPath) as! ClassificationCell
+        
+        let classification = self.classifications[indexPath.row]
+        cell.update(with: classification)
+        
+        return cell
+    }
+}
+
+
+class ClassificationCell: UITableViewCell {
+    
+    // MARK: - Outlets
+    
+    @IBOutlet var classificationLabel: UILabel!
+    @IBOutlet var confidenceLabel: UILabel!
+    
+    // MARK: - Update
+    
+    func update(with classification: VNClassificationObservation) {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .percent
+        
+        self.classificationLabel.text = classification.identifier
+        
+        let confidence = NSNumber(value: classification.confidence)
+        self.confidenceLabel.text = numberFormatter.string(from: confidence)
+    }
+}
