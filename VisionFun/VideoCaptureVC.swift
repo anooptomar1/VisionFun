@@ -11,6 +11,7 @@ class VideoCaptureViewController: UIViewController {
     // MARK: - Outlets
     
     @IBOutlet var classificationLabel: UILabel!
+    @IBOutlet var imageView: UIImageView!
     
     // MARK: - Stored Properties
     
@@ -134,7 +135,7 @@ class VideoCaptureViewController: UIViewController {
     }
     
     private func addShapeLayer() {
-        shapeLayer.fillColor = UIColor.yellow.cgColor
+        shapeLayer.fillColor = UIColor.yellow.withAlphaComponent(0.5).cgColor
         self.view.layer.addSublayer(shapeLayer)
     }
     
@@ -161,7 +162,6 @@ class VideoCaptureViewController: UIViewController {
         self.rectangleDetectionRequest = VNDetectRectanglesRequest(
             completionHandler: self.handleRectangles
         )
-        rectangleDetectionRequest?.minimumSize = 0.2
         rectangleDetectionRequest?.maximumObservations = 5
         
         self.requests = [
@@ -172,7 +172,7 @@ class VideoCaptureViewController: UIViewController {
     func handleClassifications(request: VNRequest, error: Error?) {
         guard let observations = request.results as? [VNClassificationObservation] else { return }
         
-        let classifications = observations[0...4].filter({ $0.confidence > 0.3 })
+        let classifications = observations[0...10].filter({ $0.confidence > 0.1 })
         let classificationMessages = classifications.map({ "\($0.identifier)\nconfidence: \($0.confidence)" })
         
         DispatchQueue.main.async {
@@ -188,17 +188,31 @@ class VideoCaptureViewController: UIViewController {
     }
     
     private func draw(visionRequestResults results: [VNObservation]) {
-        guard let observation = results.first as? VNRectangleObservation else { return }
+        guard let previewLayer = self.previewLayer else { return }
         
-        let viewSize = self.view.bounds.size
-        
+        let flipVertically: (CGPoint) -> CGPoint = { point in
+            return CGPoint(
+                x: point.x,
+                y: 1.0 - point.y
+            )
+        }
         let path = UIBezierPath()
         
-        path.move(to: observation.topLeft.scaled(to: viewSize))
-        path.addLine(to: observation.topRight.scaled(to: viewSize))
-        path.addLine(to: observation.bottomRight.scaled(to: viewSize))
-        path.addLine(to: observation.bottomLeft.scaled(to: viewSize))
-        path.close()
+        let observations = results.flatMap({ $0 as? VNRectangleObservation })
+        
+        for observation in observations {
+            let topLeft = flipVertically(observation.topLeft)
+            let topRight = flipVertically(observation.topRight)
+            let bottomRight = flipVertically(observation.bottomRight)
+            let bottomLeft = flipVertically(observation.bottomLeft)
+            
+            path.move(to: previewLayer.layerPointConverted(fromCaptureDevicePoint: topLeft))
+            path.addLine(to: previewLayer.layerPointConverted(fromCaptureDevicePoint: topRight))
+            path.addLine(to: previewLayer.layerPointConverted(fromCaptureDevicePoint: bottomRight))
+            path.addLine(to: previewLayer.layerPointConverted(fromCaptureDevicePoint: bottomLeft))
+            
+            path.close()
+        }
         
         shapeLayer.path = path.cgPath
     }
@@ -226,28 +240,24 @@ class VideoCaptureViewController: UIViewController {
     }
 }
 
+// MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
+
 extension VideoCaptureViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(
         _ output: AVCaptureOutput,
         didOutput sampleBuffer: CMSampleBuffer,
         from connection: AVCaptureConnection)
     {
-        connection.videoOrientation = UIDevice.current.orientation.videoOrientation
-        
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         
         var requestOptions: [VNImageOption: Any] = [:]
         
-        if let cameraIntrinsicData = CMGetAttachment(sampleBuffer, kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix, nil)
-        {
+        if let cameraIntrinsicData = CMGetAttachment(sampleBuffer, kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix, nil) {
             requestOptions = [.cameraIntrinsics: cameraIntrinsicData]
         }
         
-        let exifOrientation = getExifOrientation()
-        
         let imageRequestHandler = VNImageRequestHandler(
             cvPixelBuffer: pixelBuffer,
-            orientation: exifOrientation,
             options: requestOptions
         )
         
@@ -256,11 +266,6 @@ extension VideoCaptureViewController: AVCaptureVideoDataOutputSampleBufferDelega
         } catch {
             print(error)
         }
-    }
-    
-    private func getExifOrientation() -> Int32 {
-        // TODO: Figure out how to actually calculate this.
-        return 4
     }
 }
 
